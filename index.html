@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reception Daily Tasks • Checklist</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e2937 100%);
+            color: #e2e8f0;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #1e2937;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+        h1 {
+            margin: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            letter-spacing: -1px;
+        }
+        .subtitle {
+            margin: 8px 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        .date {
+            margin-top: 15px;
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+        .content {
+            padding: 40px;
+        }
+        .task {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 18px 0;
+            border-bottom: 1px solid #334155;
+        }
+        .task:last-child {
+            border-bottom: none;
+        }
+        input[type="checkbox"] {
+            width: 28px;
+            height: 28px;
+            accent-color: #3b82f6;
+            margin-top: 3px;
+            cursor: pointer;
+        }
+        .task-label {
+            flex: 1;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        .notes {
+            width: 100%;
+            margin-top: 8px;
+            padding: 10px 14px;
+            background: #334155;
+            border: none;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+        }
+        .section-title {
+            margin: 35px 0 15px;
+            color: #60a5fa;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        .btn {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 15px -3px rgb(59 130 246 / 0.3);
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgb(59 130 246 / 0.4);
+        }
+        .footer {
+            padding: 25px 40px;
+            background: #0f172a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .status {
+            font-size: 0.95rem;
+            color: #94a3b8;
+        }
+        .completed-count {
+            font-weight: 600;
+            color: #22c55e;
+        }
+        #report {
+            display: none;
+            position: absolute;
+            width: 1080px;
+            height: 1080px;
+            background: white;
+            color: #1e2937;
+            padding: 60px;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Reception Daily Tasks</h1>
+            <p class="subtitle">Spa / Therapy Centre Checklist</p>
+            <div class="date" id="current-date"></div>
+        </header>
+
+        <div class="content">
+            <div id="tasks"></div>
+
+            <div class="section-title">Additional Notes / Efforts</div>
+            <textarea id="recruit-notes" class="notes" rows="4" 
+                placeholder="Recruitment efforts today (platforms used, candidates contacted, interviews scheduled, etc.)..."></textarea>
+
+            <div class="section-title">Penalties Issued Today</div>
+            <textarea id="penalties-notes" class="notes" rows="3"
+                placeholder="List any grooming penalties issued (staff name + reason)..."></textarea>
+        </div>
+
+        <div class="footer">
+            <div class="status">
+                Completed: <span id="completed-count" class="completed-count">0</span> / 12 tasks
+            </div>
+            <button onclick="generateReport()" class="btn">
+                📸 Generate 1080×1080 Report PNG
+            </button>
+        </div>
+    </div>
+
+    <!-- Hidden Report Canvas -->
+    <div id="report">
+        <div style="text-align:center; margin-bottom:40px;">
+            <h1 style="margin:0; font-size:52px; color:#1e40af;">Daily Reception Report</h1>
+            <p id="report-date" style="font-size:28px; margin:10px 0 0; color:#64748b;"></p>
+        </div>
+        
+        <div id="report-tasks" style="font-size:22px; line-height:1.7;"></div>
+        
+        <div style="margin-top:50px; border-top:3px solid #e2e8f0; padding-top:30px;">
+            <h2 style="font-size:28px; margin:0 0 15px 0; color:#1e40af;">Recruitment Efforts</h2>
+            <div id="report-recruit" style="font-size:22px; white-space:pre-wrap; line-height:1.6;"></div>
+        </div>
+        
+        <div style="margin-top:40px;">
+            <h2 style="font-size:28px; margin:0 0 15px 0; color:#1e40af;">Penalties Issued</h2>
+            <div id="report-penalties" style="font-size:22px; white-space:pre-wrap; line-height:1.6; color:#b91c1c;"></div>
+        </div>
+        
+        <div style="position:absolute; bottom:60px; right:60px; text-align:right; font-size:20px; color:#64748b;">
+            Receptionist: <span id="report-receptionist">Kyle</span><br>
+            <span id="report-time"></span>
+        </div>
+    </div>
+
+    <script>
+        const tasksList = [
+            "Make sure all phones are on and fully charged.",
+            "Test all phones ensuring all calls and messages are coming through.",
+            "Answer all emails and WhatsApp messages from the previous and current days.",
+            "Post therapist catalogue + availability + daily offer on WhatsApp statuses.",
+            "Generate a short worded version of the daily deal to send to VIP broadcast lists.",
+            "Send the worded daily deal to ESA and RV sites.",
+            "Set all therapists active on ESA + RV sites on the hour every hour.",
+            "Inform management who needs reactivation.",
+            "Perform room inspection + report where time allows.",
+            "Perform grooming inspections 3 times per day, issue penalties where applicable and inform staff.",
+            "All penalties recorded on Word/Excel and pasted in the penalties book.",
+            "Recruit new staff members and show what efforts have been made to do so."
+        ];
+
+        function createTasks() {
+            const container = document.getElementById('tasks');
+            tasksList.forEach((task, index) => {
+                const div = document.createElement('div');
+                div.className = 'task';
+                div.innerHTML = `
+                    <input type="checkbox" id="task-${index}" onchange="updateCount()">
+                    <label for="task-${index}" class="task-label">${task}</label>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function updateCount() {
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            document.getElementById('completed-count').textContent = checked;
+        }
+
+        function getCurrentDate() {
+            const date = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = date.toLocaleDateString('en-ZA', options);
+            return date.toLocaleDateString('en-ZA', { day: '2-digit', month: 'long', year: 'numeric' });
+        }
+
+        async function generateReport() {
+            const reportDiv = document.getElementById('report');
+            const today = getCurrentDate();
+            
+            // Fill report
+            document.getElementById('report-date').textContent = today;
+            document.getElementById('report-time').textContent = new Date().toLocaleTimeString('en-ZA');
+            
+            // Tasks
+            let reportHTML = '';
+            document.querySelectorAll('.task').forEach((taskEl, i) => {
+                const checkbox = taskEl.querySelector('input');
+                const text = tasksList[i];
+                const checked = checkbox.checked ? '✅' : '⬜';
+                reportHTML += `<div>${checked} ${text}</div>`;
+            });
+            document.getElementById('report-tasks').innerHTML = reportHTML;
+            
+            // Notes
+            document.getElementById('report-recruit').textContent = document.getElementById('recruit-notes').value || 'No recruitment efforts recorded today.';
+            document.getElementById('report-penalties').textContent = document.getElementById('penalties-notes').value || 'No penalties issued today.';
+            
+            reportDiv.style.display = 'block';
+            
+            // Generate PNG
+            try {
+                const canvas = await html2canvas(reportDiv, {
+                    scale: 2,
+                    width: 1080,
+                    height: 1080,
+                    backgroundColor: '#ffffff'
+                });
+                
+                // Download
+                const link = document.createElement('a');
+                link.download = `Daily-Reception-Report-${today.replace(/ /g, '-')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+            } catch (err) {
+                alert('Error generating image. Please try again.');
+                console.error(err);
+            }
+            
+            reportDiv.style.display = 'none';
+        }
+
+        // Initialize
+        window.onload = () => {
+            createTasks();
+            getCurrentDate();
+            updateCount();
+            
+            // Auto-save to localStorage (optional persistence)
+            window.addEventListener('beforeunload', () => {
+                const checks = Array.from(document.querySelectorAll('input[type="checkbox"]')).map(cb => cb.checked);
+                localStorage.setItem('receptionChecklist', JSON.stringify(checks));
+            });
+            
+            // Load previous if exists
+            const saved = localStorage.getItem('receptionChecklist');
+            if (saved) {
+                const checks = JSON.parse(saved);
+                document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
+                    cb.checked = checks[i] || false;
+                });
+                updateCount();
+            }
+        };
+    </script>
+</body>
+</html>
