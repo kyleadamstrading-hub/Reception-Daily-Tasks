@@ -3,22 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reception Daily Tasks • Checklist</title>
+    <title>TiAmo Relaxation Spa • Reception</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
         
         body {
             font-family: 'Inter', system-ui, sans-serif;
             background: linear-gradient(135deg, #0f172a 0%, #1e2937 100%);
             color: #e2e8f0;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .page {
+            display: none;
             min-height: 100vh;
         }
+        .page.active {
+            display: block;
+        }
+
+        /* LANDING PAGE */
+        #landing {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), url('https://picsum.photos/id/1015/2000/1200') center/cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            color: #f8fafc;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        }
+        .tagline {
+            font-size: 1.5rem;
+            color: #cbd5e1;
+            margin-bottom: 60px;
+            letter-spacing: 2px;
+        }
+        .btn-landing {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 18px 42px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            cursor: pointer;
+            margin: 12px;
+            min-width: 280px;
+            transition: all 0.3s;
+            box-shadow: 0 15px 30px -5px rgb(59 130 246 / 0.4);
+        }
+        .btn-landing:hover {
+            transform: scale(1.05);
+        }
+
+        /* CHECKLIST PAGE */
         .container {
             max-width: 900px;
-            margin: 0 auto;
+            margin: 40px auto;
             background: #1e2937;
             border-radius: 20px;
             box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
@@ -32,19 +83,11 @@
         }
         h1 {
             margin: 0;
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.2rem;
-            letter-spacing: -1px;
-        }
-        .subtitle {
-            margin: 8px 0 0;
-            opacity: 0.9;
-            font-size: 1.1rem;
+            font-size: 2.4rem;
         }
         .date {
-            margin-top: 15px;
-            font-size: 1.3rem;
-            font-weight: 500;
+            margin-top: 10px;
+            font-size: 1.35rem;
         }
         .content {
             padding: 40px;
@@ -52,56 +95,35 @@
         .task {
             display: flex;
             align-items: flex-start;
-            gap: 15px;
+            gap: 16px;
             padding: 18px 0;
             border-bottom: 1px solid #334155;
-        }
-        .task:last-child {
-            border-bottom: none;
         }
         input[type="checkbox"] {
             width: 28px;
             height: 28px;
-            accent-color: #3b82f6;
-            margin-top: 3px;
-            cursor: pointer;
+            accent-color: #22c55e;
+            margin-top: 4px;
         }
         .task-label {
             flex: 1;
             font-size: 1.1rem;
-            line-height: 1.5;
+            line-height: 1.55;
         }
         .notes {
             width: 100%;
-            margin-top: 8px;
-            padding: 10px 14px;
+            padding: 14px;
             background: #334155;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             color: #e2e8f0;
-            font-size: 0.95rem;
+            resize: vertical;
         }
         .section-title {
-            margin: 35px 0 15px;
+            margin: 35px 0 12px;
             color: #60a5fa;
-            font-size: 1.3rem;
+            font-size: 1.35rem;
             font-weight: 600;
-        }
-        .btn {
-            background: linear-gradient(to right, #3b82f6, #8b5cf6);
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 9999px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 10px 15px -3px rgb(59 130 246 / 0.3);
-        }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 25px -5px rgb(59 130 246 / 0.4);
         }
         .footer {
             padding: 25px 40px;
@@ -112,14 +134,33 @@
             flex-wrap: wrap;
             gap: 15px;
         }
-        .status {
-            font-size: 0.95rem;
-            color: #94a3b8;
-        }
-        .completed-count {
+        .btn {
+            background: linear-gradient(to right, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            font-size: 1.1rem;
             font-weight: 600;
-            color: #22c55e;
+            border-radius: 9999px;
+            cursor: pointer;
         }
+
+        /* REPORTS PAGE */
+        #reports-page .report-item {
+            background: #334155;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .report-date {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        /* HIDDEN REPORT GENERATOR */
         #report {
             display: none;
             position: absolute;
@@ -127,64 +168,86 @@
             height: 1080px;
             background: white;
             color: #1e2937;
-            padding: 60px;
+            padding: 70px 60px;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Reception Daily Tasks</h1>
-            <p class="subtitle">Spa / Therapy Centre Checklist</p>
-            <div class="date" id="current-date"></div>
-        </header>
 
-        <div class="content">
-            <div id="tasks"></div>
+    <!-- LANDING PAGE -->
+    <div id="landing" class="page active">
+        <div class="logo">TiAmo</div>
+        <div class="tagline">Relaxation Spa</div>
+        <h2 style="color:#f1f5f9; font-size:2.2rem; margin-bottom:50px;">Reception Daily Operations</h2>
+        
+        <button onclick="showPage('checklist')" class="btn-landing">Start Daily Tasks</button>
+        <button onclick="showPage('reports')" class="btn-landing">View All Past Reports</button>
+    </div>
 
-            <div class="section-title">Additional Notes / Efforts</div>
-            <textarea id="recruit-notes" class="notes" rows="4" 
-                placeholder="Recruitment efforts today (platforms used, candidates contacted, interviews scheduled, etc.)..."></textarea>
+    <!-- CHECKLIST PAGE -->
+    <div id="checklist" class="page">
+        <div class="container">
+            <header>
+                <h1>TiAmo Relaxation Spa</h1>
+                <p style="margin:8px 0 0; opacity:0.9;">Daily Reception Checklist</p>
+                <div class="date" id="current-date"></div>
+            </header>
 
-            <div class="section-title">Penalties Issued Today</div>
-            <textarea id="penalties-notes" class="notes" rows="3"
-                placeholder="List any grooming penalties issued (staff name + reason)..."></textarea>
-        </div>
+            <div class="content">
+                <div id="tasks"></div>
 
-        <div class="footer">
-            <div class="status">
-                Completed: <span id="completed-count" class="completed-count">0</span> / 12 tasks
+                <div class="section-title">Recruitment Efforts Today</div>
+                <textarea id="recruit-notes" class="notes" rows="4" 
+                    placeholder="Platforms used, candidates contacted, interviews scheduled..."></textarea>
+
+                <div class="section-title">Penalties Issued Today</div>
+                <textarea id="penalties-notes" class="notes" rows="3"
+                    placeholder="Staff name + reason for penalty..."></textarea>
             </div>
-            <button onclick="generateReport()" class="btn">
-                📸 Generate 1080×1080 Report PNG
-            </button>
+
+            <div class="footer">
+                <div>Completed: <span id="completed-count" style="color:#22c55e; font-weight:600;">0</span> / 12</div>
+                <div>
+                    <button onclick="saveAndGenerateReport()" class="btn">Generate 1080×1080 Report</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Hidden Report Canvas -->
+    <!-- REPORTS PAGE -->
+    <div id="reports" class="page">
+        <div style="max-width:900px; margin:40px auto; padding:0 20px;">
+            <button onclick="showPage('landing')" style="margin-bottom:20px;">← Back to Home</button>
+            <h1 style="text-align:center; margin-bottom:30px;">All Past Daily Reports</h1>
+            <div id="reports-list"></div>
+        </div>
+    </div>
+
+    <!-- Hidden Report Template -->
     <div id="report">
-        <div style="text-align:center; margin-bottom:40px;">
-            <h1 style="margin:0; font-size:52px; color:#1e40af;">Daily Reception Report</h1>
-            <p id="report-date" style="font-size:28px; margin:10px 0 0; color:#64748b;"></p>
+        <div style="text-align:center; margin-bottom:50px;">
+            <h1 style="margin:0; font-size:58px; color:#1e40af;">TiAmo Relaxation Spa</h1>
+            <p style="font-size:32px; margin:10px 0 0; color:#64748b;">Daily Reception Report</p>
+            <p id="report-date" style="font-size:26px; color:#64748b;"></p>
         </div>
         
-        <div id="report-tasks" style="font-size:22px; line-height:1.7;"></div>
+        <div id="report-tasks" style="font-size:23px; line-height:1.75; margin-bottom:50px;"></div>
         
-        <div style="margin-top:50px; border-top:3px solid #e2e8f0; padding-top:30px;">
-            <h2 style="font-size:28px; margin:0 0 15px 0; color:#1e40af;">Recruitment Efforts</h2>
+        <div style="margin-top:40px;">
+            <h2 style="font-size:28px; color:#1e40af;">Recruitment Efforts</h2>
             <div id="report-recruit" style="font-size:22px; white-space:pre-wrap; line-height:1.6;"></div>
         </div>
         
         <div style="margin-top:40px;">
-            <h2 style="font-size:28px; margin:0 0 15px 0; color:#1e40af;">Penalties Issued</h2>
+            <h2 style="font-size:28px; color:#1e40af;">Penalties Issued</h2>
             <div id="report-penalties" style="font-size:22px; white-space:pre-wrap; line-height:1.6; color:#b91c1c;"></div>
         </div>
         
-        <div style="position:absolute; bottom:60px; right:60px; text-align:right; font-size:20px; color:#64748b;">
-            Receptionist: <span id="report-receptionist">Kyle</span><br>
+        <div style="position:absolute; bottom:70px; right:70px; text-align:right; font-size:21px; color:#64748b;">
+            Completed by: <strong id="report-receptionist">Receptionist</strong><br>
             <span id="report-time"></span>
         </div>
     </div>
@@ -200,13 +263,16 @@
             "Set all therapists active on ESA + RV sites on the hour every hour.",
             "Inform management who needs reactivation.",
             "Perform room inspection + report where time allows.",
-            "Perform grooming inspections 3 times per day, issue penalties where applicable and inform staff.",
+            "Perform grooming inspections 3 times per day, issue penalties where applicable.",
             "All penalties recorded on Word/Excel and pasted in the penalties book.",
-            "Recruit new staff members and show what efforts have been made to do so."
+            "Recruit new staff members and document efforts made."
         ];
+
+        let currentReportData = {};
 
         function createTasks() {
             const container = document.getElementById('tasks');
+            container.innerHTML = '';
             tasksList.forEach((task, index) => {
                 const div = document.createElement('div');
                 div.className = 'task';
@@ -219,7 +285,7 @@
         }
 
         function updateCount() {
-            const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            const checked = document.querySelectorAll('#tasks input[type="checkbox"]:checked').length;
             document.getElementById('completed-count').textContent = checked;
         }
 
@@ -230,51 +296,112 @@
             return date.toLocaleDateString('en-ZA', { day: '2-digit', month: 'long', year: 'numeric' });
         }
 
-        async function generateReport() {
-            const reportDiv = document.getElementById('report');
-            const today = getCurrentDate();
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
             
-            // Fill report
-            document.getElementById('report-date').textContent = today;
-            document.getElementById('report-time').textContent = new Date().toLocaleTimeString('en-ZA');
+            if (pageId === 'reports') {
+                loadReports();
+            }
+        }
+
+        function saveReport(data) {
+            let reports = JSON.parse(localStorage.getItem('tiamoReports') || '[]');
+            reports.unshift(data); // newest first
+            localStorage.setItem('tiamoReports', JSON.stringify(reports));
+        }
+
+        function loadReports() {
+            const list = document.getElementById('reports-list');
+            list.innerHTML = '';
+            const reports = JSON.parse(localStorage.getItem('tiamoReports') || '[]');
             
-            // Tasks
-            let reportHTML = '';
-            document.querySelectorAll('.task').forEach((taskEl, i) => {
-                const checkbox = taskEl.querySelector('input');
-                const text = tasksList[i];
-                const checked = checkbox.checked ? '✅' : '⬜';
-                reportHTML += `<div>${checked} ${text}</div>`;
+            if (reports.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#94a3b8;">No reports saved yet.</p>';
+                return;
+            }
+            
+            reports.forEach((report, index) => {
+                const div = document.createElement('div');
+                div.className = 'report-item';
+                div.innerHTML = `
+                    <div>
+                        <div class="report-date">${report.date}</div>
+                        <div style="color:#94a3b8; font-size:0.95rem;">${report.completed} / 12 tasks • ${report.time}</div>
+                    </div>
+                    <button onclick="regenerateReport(${index})" style="padding:10px 20px; background:#3b82f6; color:white; border:none; border-radius:8px; cursor:pointer;">
+                        Download PNG
+                    </button>
+                `;
+                list.appendChild(div);
             });
-            document.getElementById('report-tasks').innerHTML = reportHTML;
+        }
+
+        async function generateReportPNG(data) {
+            const reportDiv = document.getElementById('report');
             
-            // Notes
-            document.getElementById('report-recruit').textContent = document.getElementById('recruit-notes').value || 'No recruitment efforts recorded today.';
-            document.getElementById('report-penalties').textContent = document.getElementById('penalties-notes').value || 'No penalties issued today.';
+            document.getElementById('report-date').textContent = data.date;
+            document.getElementById('report-time').textContent = data.time;
+            document.getElementById('report-receptionist').textContent = "Receptionist";
+            
+            let tasksHTML = '';
+            data.tasks.forEach(t => {
+                tasksHTML += `<div>${t.checked ? '✅' : '⬜'} ${t.text}</div>`;
+            });
+            document.getElementById('report-tasks').innerHTML = tasksHTML;
+            document.getElementById('report-recruit').textContent = data.recruit || 'No recruitment efforts recorded.';
+            document.getElementById('report-penalties').textContent = data.penalties || 'No penalties issued today.';
             
             reportDiv.style.display = 'block';
             
-            // Generate PNG
             try {
-                const canvas = await html2canvas(reportDiv, {
-                    scale: 2,
-                    width: 1080,
-                    height: 1080,
-                    backgroundColor: '#ffffff'
-                });
-                
-                // Download
+                const canvas = await html2canvas(reportDiv, { scale: 2, width: 1080, height: 1080 });
                 const link = document.createElement('a');
-                link.download = `Daily-Reception-Report-${today.replace(/ /g, '-')}.png`;
+                link.download = `TiAmo-Daily-Report-${data.date.replace(/ /g, '-')}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                
-            } catch (err) {
-                alert('Error generating image. Please try again.');
-                console.error(err);
+            } catch (e) {
+                alert('Error generating PNG');
             }
             
             reportDiv.style.display = 'none';
+        }
+
+        function saveAndGenerateReport() {
+            const dateStr = getCurrentDate();
+            const timeStr = new Date().toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' });
+            
+            const tasksData = Array.from(document.querySelectorAll('#tasks .task')).map((el, i) => ({
+                text: tasksList[i],
+                checked: el.querySelector('input').checked
+            }));
+            
+            const reportData = {
+                date: dateStr,
+                time: timeStr,
+                tasks: tasksData,
+                completed: tasksData.filter(t => t.checked).length,
+                recruit: document.getElementById('recruit-notes').value.trim(),
+                penalties: document.getElementById('penalties-notes').value.trim()
+            };
+            
+            saveReport(reportData);
+            generateReportPNG(reportData);
+            
+            // Optional: reset form after saving
+            if (confirm('Report saved & downloaded! Reset checklist for tomorrow?')) {
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                document.getElementById('recruit-notes').value = '';
+                document.getElementById('penalties-notes').value = '';
+                updateCount();
+            }
+        }
+
+        function regenerateReport(index) {
+            const reports = JSON.parse(localStorage.getItem('tiamoReports') || '[]');
+            if (reports[index]) {
+                generateReportPNG(reports[index]);
+            }
         }
 
         // Initialize
@@ -282,22 +409,6 @@
             createTasks();
             getCurrentDate();
             updateCount();
-            
-            // Auto-save to localStorage (optional persistence)
-            window.addEventListener('beforeunload', () => {
-                const checks = Array.from(document.querySelectorAll('input[type="checkbox"]')).map(cb => cb.checked);
-                localStorage.setItem('receptionChecklist', JSON.stringify(checks));
-            });
-            
-            // Load previous if exists
-            const saved = localStorage.getItem('receptionChecklist');
-            if (saved) {
-                const checks = JSON.parse(saved);
-                document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
-                    cb.checked = checks[i] || false;
-                });
-                updateCount();
-            }
         };
     </script>
 </body>
